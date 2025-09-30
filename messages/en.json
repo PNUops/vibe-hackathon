@@ -1,0 +1,137 @@
+{
+  "common": {
+    "appName": "MyWave",
+    "refresh": "Refresh",
+    "previous": "Previous",
+    "next": "Next",
+    "complete": "Complete",
+    "close": "Close",
+    "findRoute": "Get Directions",
+    "today": "Today"
+  },
+  "home": {
+    "title": "Find Your Perfect Beach Today",
+    "subtitle": "Personalized recommendations based on real-time weather and your preferences",
+    "todaysTop3": "Today's Top 3 Recommendations",
+    "resetPreferences": "Reset Preferences",
+    "beachStatus": "Current Beach Status"
+  },
+  "filters": {
+    "all": "All",
+    "swimming": "Swimming",
+    "surfing": "Surfing",
+    "family": "Family",
+    "walking": "Walking"
+  },
+  "weather": {
+    "current": "Current Weather",
+    "temperature": "Temperature",
+    "waterTemp": "Water Temp",
+    "waveHeight": "Wave Height",
+    "windSpeed": "Wind Speed",
+    "humidity": "Humidity",
+    "visibility": "Visibility"
+  },
+  "beach": {
+    "matchScore": "Match",
+    "crowdLevel": "Crowd Level",
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High",
+    "facilities": "Facilities",
+    "recommendedActivities": "Recommended Activities",
+    "expectedCrowds": "Expected Crowds",
+    "currentCrowds": "Current Crowds",
+    "realTimeWeather": "Real-time Weather Information",
+    "transportation": "Getting There",
+    "car": "By Car",
+    "publicTransport": "Public Transport",
+    "parkingAvailable": "Parking Available (Paid)",
+    "subwayLine2": "10 min walk from Haeundae Station (Line 2)"
+  },
+  "status": {
+    "specialReport": "Alert",
+    "normal": "Normal",
+    "waterQuality": "Water Quality",
+    "veryGood": "Very Good",
+    "uvIndex": "UV Index",
+    "high": "High",
+    "current": "Current"
+  },
+  "onboarding": {
+    "title1": "What are your plans?",
+    "subtitle1": "Select your main activity",
+    "swimming": "Swimming",
+    "swimmingDesc": "Water activities and swimming",
+    "surfing": "Surfing",
+    "surfingDesc": "Surfing and board sports",
+    "family": "Family Outing",
+    "familyDesc": "Family activities",
+    "walking": "Walking",
+    "walkingDesc": "Beach walks and relaxation",
+
+    "title2": "Water Temperature Preference",
+    "subtitle2": "Tell us your preferred water temperature",
+    "coldWater": "Cool Water",
+    "coldWaterTemp": "Below 20°C",
+    "moderateWater": "Moderate Water",
+    "moderateWaterTemp": "21-24°C",
+    "warmWater": "Warm Water",
+    "warmWaterTemp": "Above 25°C",
+
+    "title3": "Crowd Sensitivity",
+    "subtitle3": "How do you feel about crowds?",
+    "crowdedOk": "I don't mind crowds",
+    "crowdedOkDesc": "Prefer lively atmosphere",
+    "moderateCrowd": "Moderate crowds are fine",
+    "moderateCrowdDesc": "Balanced atmosphere",
+    "quietPlace": "I prefer quiet places",
+    "quietPlaceDesc": "Prefer secluded beaches",
+
+    "title4": "Travel Distance",
+    "subtitle4": "How far are you willing to travel?",
+    "maxDistance": "Maximum distance from current location"
+  },
+  "activities": {
+    "swimming": "Swimming",
+    "sunbathing": "Sunbathing",
+    "beachVolleyball": "Beach Volleyball",
+    "surfing": "Surfing",
+    "kiteboarding": "Kiteboarding",
+    "walking": "Walking",
+    "fishing": "Fishing",
+    "jogging": "Jogging"
+  },
+  "facilities": {
+    "shower": "Showers",
+    "restroom": "Restrooms",
+    "parking": "Parking",
+    "store": "Convenience Store",
+    "firstAid": "First Aid",
+    "cafe": "Cafe",
+    "waterSports": "Water Sports",
+    "surfShop": "Surf Shop",
+    "fountain": "Musical Fountain",
+    "cableCar": "Cable Car",
+    "camping": "Camping"
+  },
+  "beaches": {
+    "haeundae": "Haeundae Beach",
+    "gwangalli": "Gwangalli Beach",
+    "songjeong": "Songjeong Beach",
+    "dadaepo": "Dadaepo Beach",
+    "songdo": "Songdo Beach",
+    "ilgwang": "Ilgwang Beach"
+  },
+  "events": {
+    "fireworks": "Busan Fireworks Festival",
+    "fireworksDesc": "Autumn beach fireworks display"
+  },
+  "units": {
+    "celsius": "°C",
+    "meter": "m",
+    "meterPerSecond": "m/s",
+    "percent": "%",
+    "kilometer": "km"
+  }
+}

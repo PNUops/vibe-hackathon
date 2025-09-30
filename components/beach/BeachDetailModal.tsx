@@ -6,6 +6,7 @@ import {
   Car, Train, Clock, ShowerHead, Coffee, Store,
   Sparkles, Calendar, Navigation, Star
 } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import Button from '../ui/Button'
 import Badge from '../ui/Badge'
 import { BeachRecommendation } from '@/types'
@@ -17,6 +18,8 @@ interface BeachDetailModalProps {
 }
 
 export default function BeachDetailModal({ beach, isOpen, onClose }: BeachDetailModalProps) {
+  const t = useTranslations()
+
   const facilitiesIcons: Record<string, any> = {
     '샤워실': ShowerHead,
     '화장실': Store,
@@ -60,7 +63,7 @@ export default function BeachDetailModal({ beach, isOpen, onClose }: BeachDetail
               <div className="absolute bottom-4 left-4">
                 <div className="bg-white/90 backdrop-blur-sm rounded-lg px-4 py-2">
                   <div className="text-2xl font-bold text-beach-600">{beach.matchScore}%</div>
-                  <div className="text-xs text-gray-600">매칭률</div>
+                  <div className="text-xs text-gray-600">{t('beach.matchScore')}</div>
                 </div>
               </div>
 
@@ -106,36 +109,36 @@ export default function BeachDetailModal({ beach, isOpen, onClose }: BeachDetail
               {/* 날씨 정보 */}
               <div>
                 <h3 className="text-lg font-semibold mb-3 text-gray-800 dark:text-gray-100">
-                  실시간 날씨 정보
+                  {t('beach.realTimeWeather')}
                 </h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
                     <div className="flex items-center justify-between mb-1">
                       <Thermometer className="w-4 h-4 text-coral-500" />
-                      <span className="text-xs text-gray-500 dark:text-gray-400">기온</span>
+                      <span className="text-xs text-gray-500 dark:text-gray-400">{t('weather.temperature')}</span>
                     </div>
-                    <div className="font-semibold">{beach.weather.temperature}°C</div>
+                    <div className="font-semibold">{beach.weather.temperature}{t('units.celsius')}</div>
                   </div>
                   <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
                     <div className="flex items-center justify-between mb-1">
                       <Thermometer className="w-4 h-4 text-beach-500" />
-                      <span className="text-xs text-gray-500 dark:text-gray-400">수온</span>
+                      <span className="text-xs text-gray-500 dark:text-gray-400">{t('weather.waterTemp')}</span>
                     </div>
-                    <div className="font-semibold">{beach.weather.waterTemperature}°C</div>
+                    <div className="font-semibold">{beach.weather.waterTemperature}{t('units.celsius')}</div>
                   </div>
                   <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
                     <div className="flex items-center justify-between mb-1">
                       <Waves className="w-4 h-4 text-wave-500" />
-                      <span className="text-xs text-gray-500 dark:text-gray-400">파고</span>
+                      <span className="text-xs text-gray-500 dark:text-gray-400">{t('weather.waveHeight')}</span>
                     </div>
-                    <div className="font-semibold">{beach.weather.waveHeight}m</div>
+                    <div className="font-semibold">{beach.weather.waveHeight}{t('units.meter')}</div>
                   </div>
                   <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
                     <div className="flex items-center justify-between mb-1">
                       <Wind className="w-4 h-4 text-gray-500" />
-                      <span className="text-xs text-gray-500 dark:text-gray-400">풍속</span>
+                      <span className="text-xs text-gray-500 dark:text-gray-400">{t('weather.windSpeed')}</span>
                     </div>
-                    <div className="font-semibold">{beach.weather.windSpeed}m/s</div>
+                    <div className="font-semibold">{beach.weather.windSpeed}{t('units.meterPerSecond')}</div>
                   </div>
                 </div>
               </div>
@@ -143,20 +146,20 @@ export default function BeachDetailModal({ beach, isOpen, onClose }: BeachDetail
               {/* 혼잡도 */}
               <div>
                 <h3 className="text-lg font-semibold mb-3 text-gray-800 dark:text-gray-100">
-                  예상 혼잡도
+                  {t('beach.expectedCrowds')}
                 </h3>
                 <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center">
                       <Users className="w-5 h-5 mr-2 text-wave-500" />
-                      <span className="font-medium">현재 혼잡도</span>
+                      <span className="font-medium">{t('beach.currentCrowds')}</span>
                     </div>
                     <Badge variant={
                       beach.crowdLevel === 'low' ? 'success' :
                       beach.crowdLevel === 'medium' ? 'warning' : 'danger'
                     }>
-                      {beach.crowdLevel === 'low' ? '여유' :
-                       beach.crowdLevel === 'medium' ? '보통' : '혼잡'}
+                      {beach.crowdLevel === 'low' ? t('beach.low') :
+                       beach.crowdLevel === 'medium' ? t('beach.medium') : t('beach.high')}
                     </Badge>
                   </div>
                   {/* 시간대별 혼잡도 예측 */}
@@ -179,7 +182,7 @@ export default function BeachDetailModal({ beach, isOpen, onClose }: BeachDetail
               {/* 추천 활동 */}
               <div>
                 <h3 className="text-lg font-semibold mb-3 text-gray-800 dark:text-gray-100">
-                  추천 활동
+                  {t('beach.recommendedActivities')}
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   {beach.activities.map((activity) => (
@@ -194,7 +197,7 @@ export default function BeachDetailModal({ beach, isOpen, onClose }: BeachDetail
               {/* 편의시설 */}
               <div>
                 <h3 className="text-lg font-semibold mb-3 text-gray-800 dark:text-gray-100">
-                  편의시설
+                  {t('beach.facilities')}
                 </h3>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                   {beach.beach.facilities.map((facility) => {
@@ -212,24 +215,24 @@ export default function BeachDetailModal({ beach, isOpen, onClose }: BeachDetail
               {/* 교통 정보 */}
               <div>
                 <h3 className="text-lg font-semibold mb-3 text-gray-800 dark:text-gray-100">
-                  오시는 길
+                  {t('beach.transportation')}
                 </h3>
                 <div className="space-y-3">
                   <div className="flex items-start space-x-3">
                     <Car className="w-5 h-5 text-gray-500 mt-0.5" />
                     <div className="flex-1">
-                      <div className="font-medium text-sm">자가용</div>
+                      <div className="font-medium text-sm">{t('beach.car')}</div>
                       <div className="text-sm text-gray-600 dark:text-gray-400">
-                        주차장 이용 가능 (유료)
+                        {t('beach.parkingAvailable')}
                       </div>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
                     <Train className="w-5 h-5 text-gray-500 mt-0.5" />
                     <div className="flex-1">
-                      <div className="font-medium text-sm">대중교통</div>
+                      <div className="font-medium text-sm">{t('beach.publicTransport')}</div>
                       <div className="text-sm text-gray-600 dark:text-gray-400">
-                        지하철 2호선 해운대역 하차 후 도보 10분
+                        {t('beach.subwayLine2')}
                       </div>
                     </div>
                   </div>
@@ -247,14 +250,14 @@ export default function BeachDetailModal({ beach, isOpen, onClose }: BeachDetail
                   }}
                 >
                   <Navigation className="w-4 h-4" />
-                  <span>길찾기</span>
+                  <span>{t('common.findRoute')}</span>
                 </Button>
                 <Button
                   variant="secondary"
                   className="flex-1"
                   onClick={onClose}
                 >
-                  닫기
+                  {t('common.close')}
                 </Button>
               </div>
             </div>

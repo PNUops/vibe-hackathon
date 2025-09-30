@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { Cloud, CloudRain, Sun, Wind, Droplets, Eye } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 interface WeatherData {
   temperature: number
@@ -17,6 +18,8 @@ interface WeatherWidgetProps {
 }
 
 export default function WeatherWidget({ weather }: WeatherWidgetProps) {
+  const t = useTranslations()
+
   const WeatherIcon = {
     sun: Sun,
     cloud: Cloud,
@@ -32,7 +35,7 @@ export default function WeatherWidget({ weather }: WeatherWidgetProps) {
     >
       <div className="flex justify-between items-start mb-4">
         <div>
-          <h3 className="text-lg font-semibold opacity-90">현재 날씨</h3>
+          <h3 className="text-lg font-semibold opacity-90">{t('weather.current')}</h3>
           <p className="text-4xl font-bold mt-2">{weather.temperature}°</p>
           <p className="text-sm opacity-80 mt-1">{weather.description}</p>
         </div>
@@ -56,22 +59,22 @@ export default function WeatherWidget({ weather }: WeatherWidgetProps) {
           <div className="flex items-center justify-center mb-1">
             <Droplets className="w-4 h-4" />
           </div>
-          <p className="text-xs text-center opacity-80">습도</p>
-          <p className="text-sm font-semibold text-center">{weather.humidity}%</p>
+          <p className="text-xs text-center opacity-80">{t('weather.humidity')}</p>
+          <p className="text-sm font-semibold text-center">{weather.humidity}{t('units.percent')}</p>
         </div>
         <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3">
           <div className="flex items-center justify-center mb-1">
             <Wind className="w-4 h-4" />
           </div>
-          <p className="text-xs text-center opacity-80">풍속</p>
-          <p className="text-sm font-semibold text-center">{weather.windSpeed}m/s</p>
+          <p className="text-xs text-center opacity-80">{t('weather.windSpeed')}</p>
+          <p className="text-sm font-semibold text-center">{weather.windSpeed}{t('units.meterPerSecond')}</p>
         </div>
         <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3">
           <div className="flex items-center justify-center mb-1">
             <Eye className="w-4 h-4" />
           </div>
-          <p className="text-xs text-center opacity-80">가시거리</p>
-          <p className="text-sm font-semibold text-center">{weather.visibility}km</p>
+          <p className="text-xs text-center opacity-80">{t('weather.visibility')}</p>
+          <p className="text-sm font-semibold text-center">{weather.visibility}{t('units.kilometer')}</p>
         </div>
       </div>
     </motion.div>

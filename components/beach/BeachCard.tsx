@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { Waves, Thermometer, Users, MapPin, Star, Calendar } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import Card from '../ui/Card'
 import Badge from '../ui/Badge'
 
@@ -29,6 +30,8 @@ interface BeachCardProps {
 }
 
 export default function BeachCard({ beach, rank, onClick }: BeachCardProps) {
+  const t = useTranslations()
+
   const crowdColors = {
     low: 'success',
     medium: 'warning',
@@ -36,9 +39,9 @@ export default function BeachCard({ beach, rank, onClick }: BeachCardProps) {
   } as const
 
   const crowdText = {
-    low: '여유',
-    medium: '보통',
-    high: '혼잡',
+    low: t('beach.low'),
+    medium: t('beach.medium'),
+    high: t('beach.high'),
   }
 
   return (
@@ -85,7 +88,7 @@ export default function BeachCard({ beach, rank, onClick }: BeachCardProps) {
                   <span className="font-semibold">{beach.rating.toFixed(1)}</span>
                 </div>
                 <div className="text-beach-600 dark:text-beach-400 font-bold text-lg">
-                  {beach.matchScore}% 일치
+                  {beach.matchScore}% {t('beach.matchScore')}
                 </div>
               </div>
             </div>
@@ -94,17 +97,17 @@ export default function BeachCard({ beach, rank, onClick }: BeachCardProps) {
             <div className="grid grid-cols-3 gap-3">
               <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-3 text-center">
                 <Thermometer className="w-5 h-5 mx-auto mb-1 text-coral-500" />
-                <p className="text-sm text-gray-600 dark:text-gray-400">수온</p>
-                <p className="font-semibold">{beach.temperature}°C</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">{t('weather.waterTemp')}</p>
+                <p className="font-semibold">{beach.temperature}{t('units.celsius')}</p>
               </div>
               <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-3 text-center">
                 <Waves className="w-5 h-5 mx-auto mb-1 text-beach-500" />
-                <p className="text-sm text-gray-600 dark:text-gray-400">파고</p>
-                <p className="font-semibold">{beach.waveHeight}m</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">{t('weather.waveHeight')}</p>
+                <p className="font-semibold">{beach.waveHeight}{t('units.meter')}</p>
               </div>
               <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-3 text-center">
                 <Users className="w-5 h-5 mx-auto mb-1 text-wave-500" />
-                <p className="text-sm text-gray-600 dark:text-gray-400">혼잡도</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">{t('beach.crowdLevel')}</p>
                 <Badge variant={crowdColors[beach.crowdLevel]}>
                   {crowdText[beach.crowdLevel]}
                 </Badge>
@@ -124,7 +127,7 @@ export default function BeachCard({ beach, rank, onClick }: BeachCardProps) {
             {beach.event && (
               <div className="bg-amber-50 dark:bg-amber-900/20 rounded-lg p-3 border border-amber-200 dark:border-amber-800">
                 <p className="text-sm font-medium text-amber-800 dark:text-amber-200">
-                  오늘 {beach.event.time} - {beach.event.name}
+                  {t('common.today')} {beach.event.time} - {beach.event.name}
                 </p>
               </div>
             )}

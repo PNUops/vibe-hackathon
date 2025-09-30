@@ -1,0 +1,137 @@
+{
+  "common": {
+    "appName": "MyWave",
+    "refresh": "刷新",
+    "previous": "上一步",
+    "next": "下一步",
+    "complete": "完成",
+    "close": "关闭",
+    "findRoute": "查找路线",
+    "today": "今天"
+  },
+  "home": {
+    "title": "寻找今天的完美海滩",
+    "subtitle": "基于实时天气和您的偏好的个性化推荐",
+    "todaysTop3": "今日推荐 TOP 3",
+    "resetPreferences": "重置偏好设置",
+    "beachStatus": "当前海滩状态"
+  },
+  "filters": {
+    "all": "全部",
+    "swimming": "游泳",
+    "surfing": "冲浪",
+    "family": "家庭",
+    "walking": "散步"
+  },
+  "weather": {
+    "current": "当前天气",
+    "temperature": "气温",
+    "waterTemp": "水温",
+    "waveHeight": "浪高",
+    "windSpeed": "风速",
+    "humidity": "湿度",
+    "visibility": "能见度"
+  },
+  "beach": {
+    "matchScore": "匹配",
+    "crowdLevel": "拥挤度",
+    "low": "空闲",
+    "medium": "普通",
+    "high": "拥挤",
+    "facilities": "设施",
+    "recommendedActivities": "推荐活动",
+    "expectedCrowds": "预计拥挤度",
+    "currentCrowds": "当前拥挤度",
+    "realTimeWeather": "实时天气信息",
+    "transportation": "交通方式",
+    "car": "自驾",
+    "publicTransport": "公共交通",
+    "parkingAvailable": "停车场可用（收费）",
+    "subwayLine2": "地铁2号线海云台站下车后步行10分钟"
+  },
+  "status": {
+    "specialReport": "特报",
+    "normal": "正常",
+    "waterQuality": "水质",
+    "veryGood": "非常好",
+    "uvIndex": "紫外线",
+    "high": "高",
+    "current": "潮流"
+  },
+  "onboarding": {
+    "title1": "您打算做什么？",
+    "subtitle1": "选择您的主要活动目的",
+    "swimming": "游泳",
+    "swimmingDesc": "戏水和游泳",
+    "surfing": "冲浪",
+    "surfingDesc": "冲浪和滑板运动",
+    "family": "家庭出游",
+    "familyDesc": "与家人一起",
+    "walking": "散步",
+    "walkingDesc": "海滩散步和休闲",
+
+    "title2": "水温偏好",
+    "subtitle2": "告诉我们您喜欢的水温",
+    "coldWater": "凉水",
+    "coldWaterTemp": "20°C以下",
+    "moderateWater": "适中水温",
+    "moderateWaterTemp": "21-24°C",
+    "warmWater": "温水",
+    "warmWaterTemp": "25°C以上",
+
+    "title3": "拥挤度敏感度",
+    "subtitle3": "您对人多的地方感觉如何？",
+    "crowdedOk": "不介意拥挤",
+    "crowdedOkDesc": "喜欢热闹的氛围",
+    "moderateCrowd": "适度的人群就好",
+    "moderateCrowdDesc": "平衡的氛围",
+    "quietPlace": "我喜欢安静的地方",
+    "quietPlaceDesc": "偏好僻静的海滩",
+
+    "title4": "出行距离",
+    "subtitle4": "您愿意最多行驶多少公里？",
+    "maxDistance": "从当前位置的最大距离"
+  },
+  "activities": {
+    "swimming": "游泳",
+    "sunbathing": "日光浴",
+    "beachVolleyball": "沙滩排球",
+    "surfing": "冲浪",
+    "kiteboarding": "风筝冲浪",
+    "walking": "散步",
+    "fishing": "钓鱼",
+    "jogging": "慢跑"
+  },
+  "facilities": {
+    "shower": "淋浴间",
+    "restroom": "卫生间",
+    "parking": "停车场",
+    "store": "便利店",
+    "firstAid": "医务室",
+    "cafe": "咖啡厅",
+    "waterSports": "水上运动",
+    "surfShop": "冲浪店",
+    "fountain": "音乐喷泉",
+    "cableCar": "缆车",
+    "camping": "露营地"
+  },
+  "beaches": {
+    "haeundae": "海云台海水浴场",
+    "gwangalli": "广安里海水浴场",
+    "songjeong": "松亭海水浴场",
+    "dadaepo": "多大浦海水浴场",
+    "songdo": "松岛海水浴场",
+    "ilgwang": "日光海水浴场"
+  },
+  "events": {
+    "fireworks": "釜山烟火节",
+    "fireworksDesc": "秋季海滩烟火表演"
+  },
+  "units": {
+    "celsius": "°C",
+    "meter": "米",
+    "meterPerSecond": "米/秒",
+    "percent": "%",
+    "kilometer": "公里"
+  }
+}

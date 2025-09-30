@@ -1,0 +1,137 @@
+{
+  "common": {
+    "appName": "MyWave",
+    "refresh": "更新",
+    "previous": "前へ",
+    "next": "次へ",
+    "complete": "完了",
+    "close": "閉じる",
+    "findRoute": "ルート検索",
+    "today": "今日"
+  },
+  "home": {
+    "title": "今日の完璧なビーチを見つけましょう",
+    "subtitle": "リアルタイムの天気とあなたの好みに基づいたパーソナライズされた推薦",
+    "todaysTop3": "今日のおすすめTOP 3",
+    "resetPreferences": "設定をリセット",
+    "beachStatus": "現在のビーチ状況"
+  },
+  "filters": {
+    "all": "すべて",
+    "swimming": "水泳",
+    "surfing": "サーフィン",
+    "family": "家族",
+    "walking": "散歩"
+  },
+  "weather": {
+    "current": "現在の天気",
+    "temperature": "気温",
+    "waterTemp": "水温",
+    "waveHeight": "波高",
+    "windSpeed": "風速",
+    "humidity": "湿度",
+    "visibility": "視程"
+  },
+  "beach": {
+    "matchScore": "一致",
+    "crowdLevel": "混雑度",
+    "low": "空いている",
+    "medium": "普通",
+    "high": "混雑",
+    "facilities": "施設",
+    "recommendedActivities": "おすすめアクティビティ",
+    "expectedCrowds": "予想混雑度",
+    "currentCrowds": "現在の混雑度",
+    "realTimeWeather": "リアルタイム天気情報",
+    "transportation": "アクセス",
+    "car": "車",
+    "publicTransport": "公共交通機関",
+    "parkingAvailable": "駐車場あり（有料）",
+    "subwayLine2": "地下鉄2号線海雲台駅から徒歩10分"
+  },
+  "status": {
+    "specialReport": "特報",
+    "normal": "正常",
+    "waterQuality": "水質",
+    "veryGood": "とても良い",
+    "uvIndex": "紫外線",
+    "high": "高い",
+    "current": "潮流"
+  },
+  "onboarding": {
+    "title1": "何をしに行きますか？",
+    "subtitle1": "主な活動目的を選択してください",
+    "swimming": "水泳",
+    "swimmingDesc": "水遊びと泳ぎ",
+    "surfing": "サーフィン",
+    "surfingDesc": "波乗りとボード",
+    "family": "家族のお出かけ",
+    "familyDesc": "家族と一緒に",
+    "walking": "散歩",
+    "walkingDesc": "ビーチ散歩とリラックス",
+
+    "title2": "水温の好み",
+    "subtitle2": "お好みの水温を教えてください",
+    "coldWater": "冷たい水",
+    "coldWaterTemp": "20°C以下",
+    "moderateWater": "適度な水温",
+    "moderateWaterTemp": "21-24°C",
+    "warmWater": "温かい水",
+    "warmWaterTemp": "25°C以上",
+
+    "title3": "混雑度の感受性",
+    "subtitle3": "人が多い場所は大丈夫ですか？",
+    "crowdedOk": "混雑していても大丈夫",
+    "crowdedOkDesc": "活気のある雰囲気が好き",
+    "moderateCrowd": "適度に人がいるのが良い",
+    "moderateCrowdDesc": "バランスの取れた雰囲気",
+    "quietPlace": "静かな場所が好き",
+    "quietPlaceDesc": "ひっそりとしたビーチが好き",
+
+    "title4": "移動距離",
+    "subtitle4": "最大何kmまで移動可能ですか？",
+    "maxDistance": "現在地からの最大距離"
+  },
+  "activities": {
+    "swimming": "水泳",
+    "sunbathing": "日光浴",
+    "beachVolleyball": "ビーチバレー",
+    "surfing": "サーフィン",
+    "kiteboarding": "カイトボーディング",
+    "walking": "散歩",
+    "fishing": "釣り",
+    "jogging": "ジョギング"
+  },
+  "facilities": {
+    "shower": "シャワー室",
+    "restroom": "トイレ",
+    "parking": "駐車場",
+    "store": "コンビニ",
+    "firstAid": "医務室",
+    "cafe": "カフェ",
+    "waterSports": "ウォータースポーツ",
+    "surfShop": "サーフショップ",
+    "fountain": "音楽噴水",
+    "cableCar": "ケーブルカー",
+    "camping": "キャンプ場"
+  },
+  "beaches": {
+    "haeundae": "海雲台ビーチ",
+    "gwangalli": "広安里ビーチ",
+    "songjeong": "松亭ビーチ",
+    "dadaepo": "多大浦ビーチ",
+    "songdo": "松島ビーチ",
+    "ilgwang": "日光ビーチ"
+  },
+  "events": {
+    "fireworks": "釜山花火大会",
+    "fireworksDesc": "秋のビーチ花火大会"
+  },
+  "units": {
+    "celsius": "°C",
+    "meter": "m",
+    "meterPerSecond": "m/s",
+    "percent": "%",
+    "kilometer": "km"
+  }
+}

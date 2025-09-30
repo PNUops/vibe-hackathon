@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Waves, Filter, RefreshCw, Sparkles } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import BeachCard from '@/components/beach/BeachCard'
 import WeatherWidget from '@/components/weather/WeatherWidget'
 import Button from '@/components/ui/Button'
@@ -10,6 +11,7 @@ import Badge from '@/components/ui/Badge'
 import useStore from '@/store/useStore'
 import OnboardingModal from '@/components/onboarding/OnboardingModal'
 import BeachDetailModal from '@/components/beach/BeachDetailModal'
+import LanguageSwitcher from '@/components/ui/LanguageSwitcher'
 
 // Mock 데이터 - 나중에 실제 API로 대체
 const mockRecommendations = [
@@ -108,15 +110,9 @@ const mockWeather = {
   icon: 'sun' as const,
 }
 
-const activityFilters = [
-  { id: 'all', label: '전체', icon: Sparkles },
-  { id: 'swimming', label: '수영', icon: Waves },
-  { id: 'surfing', label: '서핑', icon: Waves },
-  { id: 'family', label: '가족', icon: Sparkles },
-  { id: 'walking', label: '산책', icon: Sparkles },
-]
-
 export default function Home() {
+  const t = useTranslations()
+
   const {
     hasCompletedOnboarding,
     setHasCompletedOnboarding,
@@ -129,6 +125,14 @@ export default function Home() {
   const [showOnboarding, setShowOnboarding] = useState(false)
   const [selectedFilter, setSelectedFilter] = useState('all')
   const [isRefreshing, setIsRefreshing] = useState(false)
+
+  const activityFilters = [
+    { id: 'all', label: t('filters.all'), icon: Sparkles },
+    { id: 'swimming', label: t('filters.swimming'), icon: Waves },
+    { id: 'surfing', label: t('filters.surfing'), icon: Waves },
+    { id: 'family', label: t('filters.family'), icon: Sparkles },
+    { id: 'walking', label: t('filters.walking'), icon: Sparkles },
+  ]
 
   useEffect(() => {
     // 온보딩 체크
@@ -167,19 +171,22 @@ export default function Home() {
                 <Waves className="w-8 h-8 text-beach-500" />
               </motion.div>
               <h1 className="text-2xl font-bold bg-gradient-to-r from-beach-600 to-wave-600 bg-clip-text text-transparent">
-                BeachMate 부산
+                {t('common.appName')}
               </h1>
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleRefresh}
-              disabled={isRefreshing}
-              className="flex items-center space-x-2"
-            >
-              <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
-              <span>새로고침</span>
-            </Button>
+            <div className="flex items-center space-x-3">
+              <LanguageSwitcher />
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleRefresh}
+                disabled={isRefreshing}
+                className="flex items-center space-x-2"
+              >
+                <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+                <span>{t('common.refresh')}</span>
+              </Button>
+            </div>
           </div>
         </header>
 
@@ -191,10 +198,10 @@ export default function Home() {
             className="text-center mb-8"
           >
             <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-2">
-              오늘의 완벽한 해수욕장을 찾아드립니다
+              {t('home.title')}
             </h2>
             <p className="text-gray-600 dark:text-gray-400">
-              실시간 날씨와 개인 선호도를 기반으로 맞춤 추천
+              {t('home.subtitle')}
             </p>
           </motion.div>
 
@@ -231,7 +238,7 @@ export default function Home() {
                 className="text-xl font-semibold text-gray-800 dark:text-gray-100 flex items-center"
               >
                 <Sparkles className="w-5 h-5 mr-2 text-amber-500" />
-                오늘의 추천 TOP 3
+                {t('home.todaysTop3')}
               </motion.h3>
 
               {/* 해수욕장 카드 리스트 */}
@@ -266,24 +273,24 @@ export default function Home() {
               {/* 빠른 정보 */}
               <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
                 <h3 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-100">
-                  현재 해수욕장 상태
+                  {t('home.beachStatus')}
                 </h3>
                 <div className="space-y-3">
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600 dark:text-gray-400">특보</span>
-                    <Badge variant="success">정상</Badge>
+                    <span className="text-gray-600 dark:text-gray-400">{t('status.specialReport')}</span>
+                    <Badge variant="success">{t('status.normal')}</Badge>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600 dark:text-gray-400">수질</span>
-                    <Badge variant="info">매우 좋음</Badge>
+                    <span className="text-gray-600 dark:text-gray-400">{t('status.waterQuality')}</span>
+                    <Badge variant="info">{t('status.veryGood')}</Badge>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600 dark:text-gray-400">자외선</span>
-                    <Badge variant="warning">높음</Badge>
+                    <span className="text-gray-600 dark:text-gray-400">{t('status.uvIndex')}</span>
+                    <Badge variant="warning">{t('status.high')}</Badge>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600 dark:text-gray-400">조류</span>
-                    <Badge variant="default">보통</Badge>
+                    <span className="text-gray-600 dark:text-gray-400">{t('status.current')}</span>
+                    <Badge variant="default">{t('beach.medium')}</Badge>
                   </div>
                 </div>
               </div>
@@ -294,7 +301,7 @@ export default function Home() {
                 className="w-full"
                 onClick={() => setShowOnboarding(true)}
               >
-                선호도 다시 설정하기
+                {t('home.resetPreferences')}
               </Button>
             </div>
           </div>

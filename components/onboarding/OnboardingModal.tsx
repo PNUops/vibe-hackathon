@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, ChevronRight, ChevronLeft, Waves, Thermometer, Users, MapPin } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import Button from '../ui/Button'
 import useStore from '@/store/useStore'
 import { UserPreferences } from '@/types'
@@ -14,6 +15,7 @@ interface OnboardingModalProps {
 }
 
 export default function OnboardingModal({ isOpen, onClose, onComplete }: OnboardingModalProps) {
+  const t = useTranslations()
   const { setUserPreferences } = useStore()
   const [currentStep, setCurrentStep] = useState(0)
   const [preferences, setPreferences] = useState<UserPreferences>({
@@ -25,16 +27,16 @@ export default function OnboardingModal({ isOpen, onClose, onComplete }: Onboard
 
   const steps = [
     {
-      title: '무엇을 하러 가시나요?',
-      description: '주요 활동 목적을 선택해주세요',
+      title: t('onboarding.title1'),
+      description: t('onboarding.subtitle1'),
       icon: Waves,
       content: (
         <div className="grid grid-cols-2 gap-4">
           {[
-            { id: 'swimming', label: '수영', description: '물놀이와 수영' },
-            { id: 'surfing', label: '서핑', description: '파도타기와 보드' },
-            { id: 'family', label: '가족나들이', description: '가족과 함께' },
-            { id: 'walking', label: '산책', description: '해변 산책과 휴식' },
+            { id: 'swimming', label: t('onboarding.swimming'), description: t('onboarding.swimmingDesc') },
+            { id: 'surfing', label: t('onboarding.surfing'), description: t('onboarding.surfingDesc') },
+            { id: 'family', label: t('onboarding.family'), description: t('onboarding.familyDesc') },
+            { id: 'walking', label: t('onboarding.walking'), description: t('onboarding.walkingDesc') },
           ].map((option) => (
             <motion.button
               key={option.id}
@@ -55,15 +57,15 @@ export default function OnboardingModal({ isOpen, onClose, onComplete }: Onboard
       ),
     },
     {
-      title: '물 온도 선호도',
-      description: '선호하는 물 온도를 알려주세요',
+      title: t('onboarding.title2'),
+      description: t('onboarding.subtitle2'),
       icon: Thermometer,
       content: (
         <div className="space-y-4">
           {[
-            { id: 'cold', label: '시원한 물', temp: '20°C 이하', color: 'from-blue-400 to-blue-500' },
-            { id: 'moderate', label: '적당한 물', temp: '21-24°C', color: 'from-beach-400 to-beach-500' },
-            { id: 'warm', label: '따뜻한 물', temp: '25°C 이상', color: 'from-coral-400 to-coral-500' },
+            { id: 'cold', label: t('onboarding.coldWater'), temp: t('onboarding.coldWaterTemp'), color: 'from-blue-400 to-blue-500' },
+            { id: 'moderate', label: t('onboarding.moderateWater'), temp: t('onboarding.moderateWaterTemp'), color: 'from-beach-400 to-beach-500' },
+            { id: 'warm', label: t('onboarding.warmWater'), temp: t('onboarding.warmWaterTemp'), color: 'from-coral-400 to-coral-500' },
           ].map((option) => (
             <motion.button
               key={option.id}
@@ -87,15 +89,15 @@ export default function OnboardingModal({ isOpen, onClose, onComplete }: Onboard
       ),
     },
     {
-      title: '혼잡도 민감도',
-      description: '사람이 많은 곳을 괜찮아하시나요?',
+      title: t('onboarding.title3'),
+      description: t('onboarding.subtitle3'),
       icon: Users,
       content: (
         <div className="space-y-4">
           {[
-            { id: 'high', label: '북적여도 괜찮아요', description: '활기찬 분위기 선호' },
-            { id: 'medium', label: '적당히 있으면 좋아요', description: '균형잡힌 분위기' },
-            { id: 'low', label: '조용한 곳이 좋아요', description: '한적한 해변 선호' },
+            { id: 'high', label: t('onboarding.crowdedOk'), description: t('onboarding.crowdedOkDesc') },
+            { id: 'medium', label: t('onboarding.moderateCrowd'), description: t('onboarding.moderateCrowdDesc') },
+            { id: 'low', label: t('onboarding.quietPlace'), description: t('onboarding.quietPlaceDesc') },
           ].map((option) => (
             <motion.button
               key={option.id}
@@ -116,17 +118,17 @@ export default function OnboardingModal({ isOpen, onClose, onComplete }: Onboard
       ),
     },
     {
-      title: '이동 거리',
-      description: '최대 몇 km까지 이동 가능하신가요?',
+      title: t('onboarding.title4'),
+      description: t('onboarding.subtitle4'),
       icon: MapPin,
       content: (
         <div className="space-y-6">
           <div className="text-center">
             <div className="text-4xl font-bold text-beach-600 mb-2">
-              {preferences.maxDistance}km
+              {preferences.maxDistance}{t('units.kilometer')}
             </div>
             <div className="text-sm text-gray-600 dark:text-gray-400">
-              현재 위치에서 최대 거리
+              {t('onboarding.maxDistance')}
             </div>
           </div>
           <input
@@ -243,7 +245,7 @@ export default function OnboardingModal({ isOpen, onClose, onComplete }: Onboard
                   className="flex items-center space-x-2"
                 >
                   <ChevronLeft className="w-4 h-4" />
-                  <span>이전</span>
+                  <span>{t('common.previous')}</span>
                 </Button>
 
                 <div className="flex space-x-2">
@@ -267,7 +269,7 @@ export default function OnboardingModal({ isOpen, onClose, onComplete }: Onboard
                   onClick={handleNext}
                   className="flex items-center space-x-2"
                 >
-                  <span>{currentStep === steps.length - 1 ? '완료' : '다음'}</span>
+                  <span>{currentStep === steps.length - 1 ? t('common.complete') : t('common.next')}</span>
                   <ChevronRight className="w-4 h-4" />
                 </Button>
               </div>
