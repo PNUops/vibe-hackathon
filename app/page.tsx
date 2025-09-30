@@ -1,103 +1,323 @@
-import Image from "next/image";
+'use client'
+
+import { useState, useEffect } from 'react'
+import { motion } from 'framer-motion'
+import { Waves, Filter, RefreshCw, Sparkles } from 'lucide-react'
+import BeachCard from '@/components/beach/BeachCard'
+import WeatherWidget from '@/components/weather/WeatherWidget'
+import Button from '@/components/ui/Button'
+import Badge from '@/components/ui/Badge'
+import useStore from '@/store/useStore'
+import OnboardingModal from '@/components/onboarding/OnboardingModal'
+import BeachDetailModal from '@/components/beach/BeachDetailModal'
+
+// Mock 데이터 - 나중에 실제 API로 대체
+const mockRecommendations = [
+  {
+    beach: {
+      id: '1',
+      name: '해운대 해수욕장',
+      location: '부산 해운대구',
+      latitude: 35.1587,
+      longitude: 129.1604,
+      facilities: ['샤워실', '화장실', '주차장', '편의점'],
+    },
+    weather: {
+      temperature: 26,
+      waterTemperature: 24,
+      waveHeight: 0.8,
+      windSpeed: 3.5,
+      windDirection: 'E',
+      humidity: 65,
+      visibility: 10,
+      description: '맑음',
+      icon: 'sun' as const,
+    },
+    matchScore: 95,
+    rating: 4.8,
+    crowdLevel: 'medium' as const,
+    activities: ['수영', '일광욕', '비치발리볼'],
+    event: {
+      id: 'e1',
+      name: '부산 불꽃축제',
+      location: '해운대 해수욕장',
+      date: '2024-10-30',
+      time: '19:00',
+      description: '가을밤 해변 불꽃놀이',
+      type: 'fireworks' as const,
+    },
+  },
+  {
+    beach: {
+      id: '2',
+      name: '광안리 해수욕장',
+      location: '부산 수영구',
+      latitude: 35.1532,
+      longitude: 129.1189,
+      facilities: ['샤워실', '화장실', '주차장', '카페'],
+    },
+    weather: {
+      temperature: 25,
+      waterTemperature: 23,
+      waveHeight: 1.2,
+      windSpeed: 5.0,
+      windDirection: 'SE',
+      humidity: 70,
+      visibility: 8,
+      description: '구름 조금',
+      icon: 'cloud' as const,
+    },
+    matchScore: 88,
+    rating: 4.6,
+    crowdLevel: 'low' as const,
+    activities: ['서핑', '카이트보딩', '산책'],
+  },
+  {
+    beach: {
+      id: '3',
+      name: '송정 해수욕장',
+      location: '부산 해운대구',
+      latitude: 35.1785,
+      longitude: 129.1997,
+      facilities: ['샤워실', '서핑샵', '주차장'],
+    },
+    weather: {
+      temperature: 24,
+      waterTemperature: 22,
+      waveHeight: 1.5,
+      windSpeed: 6.0,
+      windDirection: 'E',
+      humidity: 68,
+      visibility: 9,
+      description: '맑음',
+      icon: 'sun' as const,
+    },
+    matchScore: 82,
+    rating: 4.5,
+    crowdLevel: 'low' as const,
+    activities: ['서핑', '낚시', '조깅'],
+  },
+]
+
+const mockWeather = {
+  temperature: 26,
+  description: '맑음',
+  humidity: 65,
+  windSpeed: 3.5,
+  visibility: 10,
+  icon: 'sun' as const,
+}
+
+const activityFilters = [
+  { id: 'all', label: '전체', icon: Sparkles },
+  { id: 'swimming', label: '수영', icon: Waves },
+  { id: 'surfing', label: '서핑', icon: Waves },
+  { id: 'family', label: '가족', icon: Sparkles },
+  { id: 'walking', label: '산책', icon: Sparkles },
+]
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const {
+    hasCompletedOnboarding,
+    setHasCompletedOnboarding,
+    recommendations,
+    setRecommendations,
+    selectedBeach,
+    setSelectedBeach
+  } = useStore()
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  const [showOnboarding, setShowOnboarding] = useState(false)
+  const [selectedFilter, setSelectedFilter] = useState('all')
+  const [isRefreshing, setIsRefreshing] = useState(false)
+
+  useEffect(() => {
+    // 온보딩 체크
+    if (!hasCompletedOnboarding) {
+      setShowOnboarding(true)
+    }
+    // Mock 데이터 설정
+    setRecommendations(mockRecommendations)
+  }, [])
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true)
+    // API 호출 시뮬레이션
+    await new Promise(resolve => setTimeout(resolve, 1500))
+    setIsRefreshing(false)
+  }
+
+  const handleOnboardingComplete = () => {
+    setHasCompletedOnboarding(true)
+    setShowOnboarding(false)
+    // 사용자 선호도에 따른 추천 데이터 가져오기
+    handleRefresh()
+  }
+
+  return (
+    <>
+      <div className="min-h-screen bg-gradient-to-b from-beach-50 to-wave-50 dark:from-gray-900 dark:to-gray-800">
+        {/* 헤더 */}
+        <header className="sticky top-0 z-40 backdrop-blur-md bg-white/70 dark:bg-gray-900/70 border-b border-beach-200 dark:border-gray-700">
+          <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div className="flex items-center space-x-3">
+              <motion.div
+                animate={{ rotate: [0, 10, -10, 0] }}
+                transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+              >
+                <Waves className="w-8 h-8 text-beach-500" />
+              </motion.div>
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-beach-600 to-wave-600 bg-clip-text text-transparent">
+                BeachMate 부산
+              </h1>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleRefresh}
+              disabled={isRefreshing}
+              className="flex items-center space-x-2"
+            >
+              <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+              <span>새로고침</span>
+            </Button>
+          </div>
+        </header>
+
+        <main className="container mx-auto px-4 py-8">
+          {/* 상단 소개 */}
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center mb-8"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+            <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-2">
+              오늘의 완벽한 해수욕장을 찾아드립니다
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400">
+              실시간 날씨와 개인 선호도를 기반으로 맞춤 추천
+            </p>
+          </motion.div>
+
+          {/* 필터 버튼 */}
+          <div className="flex flex-wrap justify-center gap-2 mb-8">
+            {activityFilters.map((filter) => {
+              const Icon = filter.icon
+              return (
+                <motion.button
+                  key={filter.id}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setSelectedFilter(filter.id)}
+                  className={`
+                    flex items-center space-x-2 px-4 py-2 rounded-full transition-all
+                    ${selectedFilter === filter.id
+                      ? 'bg-beach-500 text-white'
+                      : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-beach-100 dark:hover:bg-gray-700'}
+                  `}
+                >
+                  <Icon className="w-4 h-4" />
+                  <span>{filter.label}</span>
+                </motion.button>
+              )
+            })}
+          </div>
+
+          <div className="grid lg:grid-cols-3 gap-8">
+            {/* 메인 컨텐츠 */}
+            <div className="lg:col-span-2 space-y-6">
+              <motion.h3
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="text-xl font-semibold text-gray-800 dark:text-gray-100 flex items-center"
+              >
+                <Sparkles className="w-5 h-5 mr-2 text-amber-500" />
+                오늘의 추천 TOP 3
+              </motion.h3>
+
+              {/* 해수욕장 카드 리스트 */}
+              <div className="space-y-4">
+                {recommendations.map((rec, index) => (
+                  <BeachCard
+                    key={rec.beach.id}
+                    beach={{
+                      id: rec.beach.id,
+                      name: rec.beach.name,
+                      location: rec.beach.location,
+                      rating: rec.rating,
+                      matchScore: rec.matchScore,
+                      temperature: rec.weather.waterTemperature,
+                      waveHeight: rec.weather.waveHeight,
+                      crowdLevel: rec.crowdLevel,
+                      activities: rec.activities,
+                      event: rec.event,
+                    }}
+                    rank={index + 1}
+                    onClick={() => setSelectedBeach(rec)}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* 사이드바 */}
+            <div className="space-y-6">
+              {/* 날씨 위젯 */}
+              <WeatherWidget weather={mockWeather} />
+
+              {/* 빠른 정보 */}
+              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
+                <h3 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-100">
+                  현재 해수욕장 상태
+                </h3>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600 dark:text-gray-400">특보</span>
+                    <Badge variant="success">정상</Badge>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600 dark:text-gray-400">수질</span>
+                    <Badge variant="info">매우 좋음</Badge>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600 dark:text-gray-400">자외선</span>
+                    <Badge variant="warning">높음</Badge>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600 dark:text-gray-400">조류</span>
+                    <Badge variant="default">보통</Badge>
+                  </div>
+                </div>
+              </div>
+
+              {/* CTA 버튼 */}
+              <Button
+                variant="primary"
+                className="w-full"
+                onClick={() => setShowOnboarding(true)}
+              >
+                선호도 다시 설정하기
+              </Button>
+            </div>
+          </div>
+        </main>
+      </div>
+
+      {/* 온보딩 모달 */}
+      {showOnboarding && (
+        <OnboardingModal
+          isOpen={showOnboarding}
+          onClose={() => setShowOnboarding(false)}
+          onComplete={handleOnboardingComplete}
+        />
+      )}
+
+      {/* 상세 정보 모달 */}
+      {selectedBeach && (
+        <BeachDetailModal
+          beach={selectedBeach}
+          isOpen={!!selectedBeach}
+          onClose={() => setSelectedBeach(null)}
+        />
+      )}
+    </>
   );
 }

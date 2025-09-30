@@ -1,26 +1,70 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --background: #fafbfc;
+  --foreground: #1a2332;
+  --card: #ffffff;
+  --card-foreground: #1a2332;
+  --primary: #0ea5e9;
+  --primary-foreground: #ffffff;
+  --secondary: #5eead4;
+  --secondary-foreground: #115e59;
+  --accent: #fbbf24;
+  --accent-foreground: #78350f;
+  --muted: #f3f4f6;
+  --muted-foreground: #6b7280;
+  --border: #e5e7eb;
+  --radius: 0.75rem;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #0c1222;
+    --foreground: #f3f4f6;
+    --card: #1a2332;
+    --card-foreground: #f3f4f6;
+    --primary: #38bdf8;
+    --primary-foreground: #0c1222;
+    --secondary: #2dd4bf;
+    --secondary-foreground: #f0fdfc;
+    --accent: #f59e0b;
+    --accent-foreground: #fefce8;
+    --muted: #374151;
+    --muted-foreground: #9ca3af;
+    --border: #374151;
   }
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', sans-serif;
+  min-height: 100vh;
+  antialiasing: antialiased;
+}
+
+@layer components {
+  .card {
+    @apply bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300;
+  }
+
+  .card-gradient {
+    @apply bg-gradient-to-br from-beach-200 to-wave-200 text-white;
+  }
+
+  .btn-primary {
+    @apply bg-beach-500 hover:bg-beach-600 text-white font-semibold py-3 px-6 rounded-xl transition-colors duration-200;
+  }
+
+  .btn-secondary {
+    @apply bg-wave-500 hover:bg-wave-600 text-white font-semibold py-3 px-6 rounded-xl transition-colors duration-200;
+  }
 }

@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  beachmate:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: beachmate-busan
+    ports:
+      - "3001:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    environment:
+      - NODE_ENV=development
+    restart: unless-stopped
+    networks:
+      - beachmate-network
+
+networks:
+  beachmate-network:
+    driver: bridge
