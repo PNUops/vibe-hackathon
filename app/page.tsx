@@ -12,6 +12,7 @@ import useStore from '@/store/useStore'
 import OnboardingModal from '@/components/onboarding/OnboardingModal'
 import BeachDetailModal from '@/components/beach/BeachDetailModal'
 import LanguageSwitcher from '@/components/ui/LanguageSwitcher'
+import LanguageSelectionModal from '@/components/LanguageSelectionModal'
 
 // Mock 데이터 - 나중에 실제 API로 대체
 const mockRecommendations = [
@@ -122,6 +123,7 @@ export default function Home() {
     setSelectedBeach
   } = useStore()
 
+  const [showLanguageSelection, setShowLanguageSelection] = useState(false)
   const [showOnboarding, setShowOnboarding] = useState(false)
   const [selectedFilter, setSelectedFilter] = useState('all')
   const [isRefreshing, setIsRefreshing] = useState(false)
@@ -135,9 +137,15 @@ export default function Home() {
   ]
 
   useEffect(() => {
-    // 온보딩 체크
-    if (!hasCompletedOnboarding) {
-      setShowOnboarding(true)
+    // 언어 선택 체크
+    const hasSelectedLanguage = localStorage.getItem('language-selected')
+    if (!hasSelectedLanguage) {
+      setShowLanguageSelection(true)
+    } else {
+      // 언어를 이미 선택했다면 온보딩 체크
+      if (!hasCompletedOnboarding) {
+        setShowOnboarding(true)
+      }
     }
     // Mock 데이터 설정
     setRecommendations(mockRecommendations)
@@ -155,6 +163,12 @@ export default function Home() {
     setShowOnboarding(false)
     // 사용자 선호도에 따른 추천 데이터 가져오기
     handleRefresh()
+  }
+
+  const handleLanguageSelect = (langCode: string) => {
+    setShowLanguageSelection(false)
+    // 페이지 새로고침하여 선택한 언어 적용
+    window.location.reload()
   }
 
   return (
@@ -308,8 +322,14 @@ export default function Home() {
         </main>
       </div>
 
+      {/* 언어 선택 모달 - 가장 먼저 표시 */}
+      <LanguageSelectionModal
+        isOpen={showLanguageSelection}
+        onLanguageSelect={handleLanguageSelect}
+      />
+
       {/* 온보딩 모달 */}
-      {showOnboarding && (
+      {showOnboarding && !showLanguageSelection && (
         <OnboardingModal
           isOpen={showOnboarding}
           onClose={() => setShowOnboarding(false)}
