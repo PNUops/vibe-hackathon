@@ -89,7 +89,7 @@ export default function AIReasonBubble({
 
   return (
     <div className="relative">
-      {/* AI 아바타 */}
+      {/* Wave 아바타 */}
       {showAvatar && (
         <motion.div
           whileHover={{ scale: 1.1 }}
@@ -160,7 +160,7 @@ export default function AIReasonBubble({
                   <div className="flex items-center gap-2">
                     <Sparkles className="w-4 h-4 text-purple-500" />
                     <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-                      AI 추천 이유
+                      추천 이유
                     </span>
                   </div>
                   <button

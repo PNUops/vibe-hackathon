@@ -19,7 +19,7 @@ export default function RecommendationsPage() {
   const { userPreferences, setHasCompletedOnboarding } = useStore()
   const [recommendations, setRecommendations] = useState<WaterActivityRecommendation[]>([])
   const [loading, setLoading] = useState(true)
-  const [showAIAssistant, setShowAIAssistant] = useState(true)
+  const [showAssistant, setShowAssistant] = useState(true)
   const [showOnboarding, setShowOnboarding] = useState(false)
 
   useEffect(() => {
@@ -73,7 +73,7 @@ export default function RecommendationsPage() {
     setShowOnboarding(false)
     // 새로운 설정으로 추천 다시 로드
     await loadRecommendations()
-    setShowAIAssistant(true) // AI 어시스턴트 다시 표시
+    setShowAssistant(true) // 추천 이유 다시 표시
   }
 
   const topRecommendation = recommendations[0]
@@ -128,7 +128,7 @@ export default function RecommendationsPage() {
               <Sparkles className="w-6 h-6 text-beach-500" />
             </motion.div>
             <h1 className="text-xl font-bold bg-gradient-to-r from-beach-600 to-wave-600 bg-clip-text text-transparent">
-              AI 맞춤 추천
+              Wave 맞춤 추천
             </h1>
           </div>
 
@@ -145,14 +145,14 @@ export default function RecommendationsPage() {
       </header>
 
       <main className="container mx-auto px-4 py-8 max-w-7xl">
-        {/* AI 어시스턴트 */}
+        {/* 추천 이유 안내 */}
         <div className="fixed bottom-8 right-8 z-50">
           <AIReasonBubble
             reasons={topRecommendation.matchReasons}
             position="left"
-            autoShow={showAIAssistant}
+            autoShow={showAssistant}
             animated={true}
-            onClose={() => setShowAIAssistant(false)}
+            onClose={() => setShowAssistant(false)}
           />
         </div>
 
@@ -254,7 +254,7 @@ export default function RecommendationsPage() {
           <div className="inline-flex items-center gap-2 px-6 py-3 bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-full shadow-lg">
             <Sparkles className="w-4 h-4 text-purple-500" />
             <span className="text-sm text-gray-600 dark:text-gray-400">
-              AI가 {recommendations.length}개의 장소를 분석하여 선별했습니다
+              {recommendations.length}개의 장소를 분석하여 선별했습니다
             </span>
           </div>
         </motion.div>

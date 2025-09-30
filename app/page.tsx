@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Waves, RefreshCw, MapPin, TrendingUp } from 'lucide-react'
+import { Waves, RefreshCw, MapPin, TrendingUp, Sparkles } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import WaterLocationList from '@/components/water/WaterLocationList'
 import WeatherWidget from '@/components/weather/WeatherWidget'
@@ -124,6 +124,29 @@ export default function Home() {
             <div className="flex items-center space-x-3">
               <LanguageSwitcher />
               <Button
+                variant="primary"
+                size="sm"
+                onClick={() => setShowOnboarding(true)}
+                className="flex items-center space-x-2 relative group overflow-hidden"
+              >
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20"
+                  animate={{
+                    x: ['-100%', '100%'],
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "linear"
+                  }}
+                />
+                <Sparkles className="w-4 h-4 relative z-10" />
+                <span className="relative z-10 hidden sm:inline">
+                  {hasCompletedOnboarding ? '맞춤 추천 다시 받기' : 'Wave 맞춤 추천'}
+                </span>
+                <span className="relative z-10 sm:hidden">추천</span>
+              </Button>
+              <Button
                 variant="outline"
                 size="sm"
                 onClick={handleRefresh}
@@ -131,7 +154,7 @@ export default function Home() {
                 className="flex items-center space-x-2"
               >
                 <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
-                <span>{t('common.refresh')}</span>
+                <span className="hidden sm:inline">{t('common.refresh')}</span>
               </Button>
             </div>
           </div>
@@ -236,32 +259,22 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* CTA 버튼 */}
-              <div className="space-y-3">
-                <Button
-                  variant="primary"
-                  className="w-full relative group overflow-hidden"
-                  onClick={() => setShowOnboarding(true)}
-                >
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20"
-                    animate={{
-                      x: ['-100%', '100%'],
-                    }}
-                    transition={{
-                      duration: 3,
-                      repeat: Infinity,
-                      ease: "linear"
-                    }}
-                  />
-                  <span className="relative flex items-center justify-center gap-2">
-                    <Waves className="w-5 h-5" />
-                    {hasCompletedOnboarding ? '맞춤 추천 다시 받기' : 'AI 맞춤 추천 시작하기'}
-                  </span>
-                </Button>
-                <p className="text-xs text-center text-gray-500 dark:text-gray-400">
-                  취향에 맞는 물놀이 장소를 추천해드립니다
-                </p>
+              {/* 빠른 시작 안내 */}
+              <div className="bg-gradient-to-br from-beach-50 to-wave-50 dark:from-beach-900/20 dark:to-wave-900/20 rounded-2xl p-6 border-2 border-dashed border-beach-300 dark:border-beach-700">
+                <div className="text-center space-y-3">
+                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-beach-500 text-white">
+                    <Sparkles className="w-6 h-6" />
+                  </div>
+                  <h4 className="font-semibold text-gray-800 dark:text-gray-100">
+                    Wave 맞춤 추천
+                  </h4>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    취향에 맞는 물놀이 장소를 찾아드립니다
+                  </p>
+                  <p className="text-xs text-beach-600 dark:text-beach-400 font-medium">
+                    👆 상단의 'Wave 맞춤 추천' 버튼을 눌러보세요
+                  </p>
+                </div>
               </div>
             </div>
           </div>
