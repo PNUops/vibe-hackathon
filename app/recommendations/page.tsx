@@ -2,23 +2,25 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { ArrowLeft, Sparkles, MapPin, Filter } from 'lucide-react'
+import { ArrowLeft, Sparkles, MapPin, Settings } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import RecommendationHero from '@/components/recommendation/RecommendationHero'
 import WaterLocationCard from '@/components/water/WaterLocationCard'
 import AIReasonBubble from '@/components/ui/AIReasonBubble'
 import SkeletonLoader from '@/components/ui/SkeletonLoader'
 import Button from '@/components/ui/Button'
+import OnboardingModal from '@/components/onboarding/OnboardingModal'
 import useStore from '@/store/useStore'
 import { WaterActivityService } from '@/lib/api/services/WaterActivityService'
 import { WaterActivityRecommendation } from '@/types/water-activities'
 
 export default function RecommendationsPage() {
   const router = useRouter()
-  const { userPreferences } = useStore()
+  const { userPreferences, setHasCompletedOnboarding } = useStore()
   const [recommendations, setRecommendations] = useState<WaterActivityRecommendation[]>([])
   const [loading, setLoading] = useState(true)
   const [showAIAssistant, setShowAIAssistant] = useState(true)
+  const [showOnboarding, setShowOnboarding] = useState(false)
 
   useEffect(() => {
     loadRecommendations()
@@ -64,6 +66,14 @@ export default function RecommendationsPage() {
     } finally {
       setLoading(false)
     }
+  }
+
+  const handleOnboardingComplete = async () => {
+    setHasCompletedOnboarding(true)
+    setShowOnboarding(false)
+    // 새로운 설정으로 추천 다시 로드
+    await loadRecommendations()
+    setShowAIAssistant(true) // AI 어시스턴트 다시 표시
   }
 
   const topRecommendation = recommendations[0]
@@ -125,11 +135,11 @@ export default function RecommendationsPage() {
           <Button
             variant="outline"
             size="sm"
-            onClick={loadRecommendations}
+            onClick={() => setShowOnboarding(true)}
             className="flex items-center gap-2"
           >
-            <Filter className="w-4 h-4" />
-            재추천
+            <Settings className="w-4 h-4" />
+            설정 변경
           </Button>
         </div>
       </header>
@@ -249,6 +259,15 @@ export default function RecommendationsPage() {
           </div>
         </motion.div>
       </main>
+
+      {/* 온보딩 모달 - 설정 변경 */}
+      {showOnboarding && (
+        <OnboardingModal
+          isOpen={showOnboarding}
+          onClose={() => setShowOnboarding(false)}
+          onComplete={handleOnboardingComplete}
+        />
+      )}
     </div>
   )
 }

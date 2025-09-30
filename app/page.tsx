@@ -237,13 +237,32 @@ export default function Home() {
               </div>
 
               {/* CTA 버튼 */}
-              <Button
-                variant="primary"
-                className="w-full"
-                onClick={() => setShowOnboarding(true)}
-              >
-                {t('home.resetPreferences')}
-              </Button>
+              <div className="space-y-3">
+                <Button
+                  variant="primary"
+                  className="w-full relative group overflow-hidden"
+                  onClick={() => setShowOnboarding(true)}
+                >
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20"
+                    animate={{
+                      x: ['-100%', '100%'],
+                    }}
+                    transition={{
+                      duration: 3,
+                      repeat: Infinity,
+                      ease: "linear"
+                    }}
+                  />
+                  <span className="relative flex items-center justify-center gap-2">
+                    <Waves className="w-5 h-5" />
+                    {hasCompletedOnboarding ? '맞춤 추천 다시 받기' : 'AI 맞춤 추천 시작하기'}
+                  </span>
+                </Button>
+                <p className="text-xs text-center text-gray-500 dark:text-gray-400">
+                  취향에 맞는 물놀이 장소를 추천해드립니다
+                </p>
+              </div>
             </div>
           </div>
         </main>
