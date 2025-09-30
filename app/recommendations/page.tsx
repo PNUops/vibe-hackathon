@@ -146,7 +146,7 @@ export default function RecommendationsPage() {
 
       <main className="container mx-auto px-4 py-8 max-w-7xl">
         {/* 추천 이유 안내 */}
-        <div className="fixed bottom-24 right-8 z-50 max-w-sm">
+        <div className="fixed bottom-24 left-8 z-50 max-w-sm">
           <AIReasonBubble
             reasons={topRecommendation.matchReasons}
             position="top"
