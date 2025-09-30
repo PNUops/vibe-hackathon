@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Waves, Filter, RefreshCw, Sparkles } from 'lucide-react'
+import { Waves, RefreshCw, MapPin, TrendingUp } from 'lucide-react'
 import { useTranslations } from 'next-intl'
-import BeachCard from '@/components/beach/BeachCard'
+import WaterLocationList from '@/components/water/WaterLocationList'
 import WeatherWidget from '@/components/weather/WeatherWidget'
 import Button from '@/components/ui/Button'
 import Badge from '@/components/ui/Badge'
@@ -13,95 +13,10 @@ import OnboardingModal from '@/components/onboarding/OnboardingModal'
 import BeachDetailModal from '@/components/beach/BeachDetailModal'
 import LanguageSwitcher from '@/components/ui/LanguageSwitcher'
 import LanguageSelectionModal from '@/components/LanguageSelectionModal'
+import { WaterLocation } from '@/types/water-activities'
+import { WaterActivityService } from '@/lib/api/services/WaterActivityService'
 
-// Mock 데이터 - 나중에 실제 API로 대체
-const mockRecommendations = [
-  {
-    beach: {
-      id: '1',
-      name: '해운대 해수욕장',
-      location: '부산 해운대구',
-      latitude: 35.1587,
-      longitude: 129.1604,
-      facilities: ['샤워실', '화장실', '주차장', '편의점'],
-    },
-    weather: {
-      temperature: 26,
-      waterTemperature: 24,
-      waveHeight: 0.8,
-      windSpeed: 3.5,
-      windDirection: 'E',
-      humidity: 65,
-      visibility: 10,
-      description: '맑음',
-      icon: 'sun' as const,
-    },
-    matchScore: 95,
-    rating: 4.8,
-    crowdLevel: 'medium' as const,
-    activities: ['수영', '일광욕', '비치발리볼'],
-    event: {
-      id: 'e1',
-      name: '부산 불꽃축제',
-      location: '해운대 해수욕장',
-      date: '2024-10-30',
-      time: '19:00',
-      description: '가을밤 해변 불꽃놀이',
-      type: 'fireworks' as const,
-    },
-  },
-  {
-    beach: {
-      id: '2',
-      name: '광안리 해수욕장',
-      location: '부산 수영구',
-      latitude: 35.1532,
-      longitude: 129.1189,
-      facilities: ['샤워실', '화장실', '주차장', '카페'],
-    },
-    weather: {
-      temperature: 25,
-      waterTemperature: 23,
-      waveHeight: 1.2,
-      windSpeed: 5.0,
-      windDirection: 'SE',
-      humidity: 70,
-      visibility: 8,
-      description: '구름 조금',
-      icon: 'cloud' as const,
-    },
-    matchScore: 88,
-    rating: 4.6,
-    crowdLevel: 'low' as const,
-    activities: ['서핑', '카이트보딩', '산책'],
-  },
-  {
-    beach: {
-      id: '3',
-      name: '송정 해수욕장',
-      location: '부산 해운대구',
-      latitude: 35.1785,
-      longitude: 129.1997,
-      facilities: ['샤워실', '서핑샵', '주차장'],
-    },
-    weather: {
-      temperature: 24,
-      waterTemperature: 22,
-      waveHeight: 1.5,
-      windSpeed: 6.0,
-      windDirection: 'E',
-      humidity: 68,
-      visibility: 9,
-      description: '맑음',
-      icon: 'sun' as const,
-    },
-    matchScore: 82,
-    rating: 4.5,
-    crowdLevel: 'low' as const,
-    activities: ['서핑', '낚시', '조깅'],
-  },
-]
-
+// 현재 날씨 정보 (Mock)
 const mockWeather = {
   temperature: 26,
   description: '맑음',
@@ -125,50 +40,70 @@ export default function Home() {
 
   const [showLanguageSelection, setShowLanguageSelection] = useState(false)
   const [showOnboarding, setShowOnboarding] = useState(false)
-  const [selectedFilter, setSelectedFilter] = useState('all')
   const [isRefreshing, setIsRefreshing] = useState(false)
-
-  const activityFilters = [
-    { id: 'all', label: t('filters.all'), icon: Sparkles },
-    { id: 'swimming', label: t('filters.swimming'), icon: Waves },
-    { id: 'surfing', label: t('filters.surfing'), icon: Waves },
-    { id: 'family', label: t('filters.family'), icon: Sparkles },
-    { id: 'walking', label: t('filters.walking'), icon: Sparkles },
-  ]
+  const [selectedLocation, setSelectedLocation] = useState<WaterLocation | null>(null)
+  const [popularLocations, setPopularLocations] = useState<WaterLocation[]>([])
+  const [loadingPopular, setLoadingPopular] = useState(true)
 
   useEffect(() => {
     // 언어 선택 체크
     const hasSelectedLanguage = localStorage.getItem('language-selected')
     if (!hasSelectedLanguage) {
       setShowLanguageSelection(true)
-    } else {
-      // 언어를 이미 선택했다면 온보딩 체크
-      if (!hasCompletedOnboarding) {
-        setShowOnboarding(true)
-      }
+      return // 언어 선택이 우선
     }
-    // Mock 데이터 설정
-    setRecommendations(mockRecommendations)
-  }, [])
+
+    // 언어를 이미 선택했다면 온보딩 체크 (초기 마운트 시에만)
+    if (!hasCompletedOnboarding) {
+      setShowOnboarding(true)
+    }
+
+    // 인기 장소 로드
+    loadPopularLocations()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []) // 초기 마운트 시에만 실행
+
+  const loadPopularLocations = async () => {
+    try {
+      setLoadingPopular(true)
+      const service = WaterActivityService.getInstance()
+      const popular = await service.getPopularLocations(3)
+      setPopularLocations(popular)
+    } catch (error) {
+      console.error('Failed to load popular locations:', error)
+    } finally {
+      setLoadingPopular(false)
+    }
+  }
 
   const handleRefresh = async () => {
     setIsRefreshing(true)
-    // API 호출 시뮬레이션
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    setIsRefreshing(false)
+    try {
+      await loadPopularLocations()
+      // WaterLocationList 컴포넌트가 자동으로 데이터를 다시 로드하므로
+      // 페이지 전체를 리로드할 필요 없음
+    } catch (error) {
+      console.error('Failed to refresh:', error)
+    } finally {
+      setIsRefreshing(false)
+    }
   }
 
-  const handleOnboardingComplete = () => {
+  const handleOnboardingComplete = async () => {
     setHasCompletedOnboarding(true)
     setShowOnboarding(false)
-    // 사용자 선호도에 따른 추천 데이터 가져오기
-    handleRefresh()
+    // 사용자 선호도에 따른 추천 데이터 가져오기 (페이지 리로드 없이)
+    await loadPopularLocations()
   }
 
   const handleLanguageSelect = (langCode: string) => {
     setShowLanguageSelection(false)
     // 페이지 새로고침하여 선택한 언어 적용
     window.location.reload()
+  }
+
+  const handleLocationClick = (location: WaterLocation) => {
+    setSelectedLocation(location)
   }
 
   return (
@@ -212,71 +147,19 @@ export default function Home() {
             className="text-center mb-8"
           >
             <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-2">
-              {t('home.title')}
+              🌊 부산 물놀이 통합 플랫폼
             </h2>
             <p className="text-gray-600 dark:text-gray-400">
-              {t('home.subtitle')}
+              해수욕장, 계곡, 갯벌, 해양스포츠를 한 곳에서
             </p>
           </motion.div>
 
-          {/* 필터 버튼 */}
-          <div className="flex flex-wrap justify-center gap-2 mb-8">
-            {activityFilters.map((filter) => {
-              const Icon = filter.icon
-              return (
-                <motion.button
-                  key={filter.id}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setSelectedFilter(filter.id)}
-                  className={`
-                    flex items-center space-x-2 px-4 py-2 rounded-full transition-all
-                    ${selectedFilter === filter.id
-                      ? 'bg-beach-500 text-white'
-                      : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-beach-100 dark:hover:bg-gray-700'}
-                  `}
-                >
-                  <Icon className="w-4 h-4" />
-                  <span>{filter.label}</span>
-                </motion.button>
-              )
-            })}
-          </div>
-
           <div className="grid lg:grid-cols-3 gap-8">
-            {/* 메인 컨텐츠 */}
-            <div className="lg:col-span-2 space-y-6">
-              <motion.h3
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="text-xl font-semibold text-gray-800 dark:text-gray-100 flex items-center"
-              >
-                <Sparkles className="w-5 h-5 mr-2 text-amber-500" />
-                {t('home.todaysTop3')}
-              </motion.h3>
-
-              {/* 해수욕장 카드 리스트 */}
-              <div className="space-y-4">
-                {recommendations.map((rec, index) => (
-                  <BeachCard
-                    key={rec.beach.id}
-                    beach={{
-                      id: rec.beach.id,
-                      name: rec.beach.name,
-                      location: rec.beach.location,
-                      rating: rec.rating,
-                      matchScore: rec.matchScore,
-                      temperature: rec.weather.waterTemperature,
-                      waveHeight: rec.weather.waveHeight,
-                      crowdLevel: rec.crowdLevel,
-                      activities: rec.activities,
-                      event: rec.event,
-                    }}
-                    rank={index + 1}
-                    onClick={() => setSelectedBeach(rec)}
-                  />
-                ))}
-              </div>
+            {/* 메인 컨텐츠 - 전체 물놀이 장소 리스트 */}
+            <div className="lg:col-span-2">
+              <WaterLocationList
+                onLocationClick={handleLocationClick}
+              />
             </div>
 
             {/* 사이드바 */}
@@ -284,27 +167,73 @@ export default function Home() {
               {/* 날씨 위젯 */}
               <WeatherWidget weather={mockWeather} />
 
-              {/* 빠른 정보 */}
+              {/* 인기 장소 */}
+              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
+                <h3 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-100 flex items-center">
+                  <TrendingUp className="w-5 h-5 mr-2 text-red-500" />
+                  인기 장소 TOP 3
+                </h3>
+                {loadingPopular ? (
+                  <div className="text-center py-4">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-beach-500 mx-auto"></div>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {popularLocations.map((location, index) => (
+                      <div
+                        key={location.id}
+                        className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer transition-colors"
+                        onClick={() => handleLocationClick(location)}
+                      >
+                        <div className="flex items-center space-x-3">
+                          <span className="text-2xl font-bold text-gray-400">
+                            {index + 1}
+                          </span>
+                          <div>
+                            <p className="font-medium text-gray-800 dark:text-gray-100">
+                              {location.name}
+                            </p>
+                            <p className="text-xs text-gray-500 dark:text-gray-400">
+                              {location.district}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center">
+                          <MapPin className="w-4 h-4 text-gray-400 mr-1" />
+                          <span className="text-sm text-gray-600 dark:text-gray-300">
+                            {location.type === 'beach' && '🏖️'}
+                            {location.type === 'valley' && '⛰️'}
+                            {location.type === 'mudflat' && '🦀'}
+                            {location.type === 'marine_sports' && '🏄'}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* 물놀이 안전 정보 */}
               <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
                 <h3 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-100">
-                  {t('home.beachStatus')}
+                  오늘의 물놀이 정보
                 </h3>
                 <div className="space-y-3">
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600 dark:text-gray-400">{t('status.specialReport')}</span>
-                    <Badge variant="success">{t('status.normal')}</Badge>
+                    <span className="text-gray-600 dark:text-gray-400">특보</span>
+                    <Badge variant="success">정상</Badge>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600 dark:text-gray-400">{t('status.waterQuality')}</span>
-                    <Badge variant="info">{t('status.veryGood')}</Badge>
+                    <span className="text-gray-600 dark:text-gray-400">수질</span>
+                    <Badge variant="info">매우좋음</Badge>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600 dark:text-gray-400">{t('status.uvIndex')}</span>
-                    <Badge variant="warning">{t('status.high')}</Badge>
+                    <span className="text-gray-600 dark:text-gray-400">자외선</span>
+                    <Badge variant="warning">높음</Badge>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600 dark:text-gray-400">{t('status.current')}</span>
-                    <Badge variant="default">{t('beach.medium')}</Badge>
+                    <span className="text-gray-600 dark:text-gray-400">조류</span>
+                    <Badge variant="default">보통</Badge>
                   </div>
                 </div>
               </div>
@@ -337,12 +266,15 @@ export default function Home() {
         />
       )}
 
-      {/* 상세 정보 모달 */}
-      {selectedBeach && (
+      {/* 상세 정보 모달 - 추후 WaterLocationDetail 컴포넌트로 대체 예정 */}
+      {selectedLocation && selectedBeach && (
         <BeachDetailModal
           beach={selectedBeach}
           isOpen={!!selectedBeach}
-          onClose={() => setSelectedBeach(null)}
+          onClose={() => {
+            setSelectedBeach(null)
+            setSelectedLocation(null)
+          }}
         />
       )}
     </>
