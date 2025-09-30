@@ -198,7 +198,7 @@ export default function WaterLocationList({
                     <span className="text-sm text-gray-600 dark:text-gray-400">{t.crowdLevel}:</span>
                     <select
                       value={selectedCrowdLevel}
-                      onChange={(e) => setSelectedCrowdLevel(e.target.value as any)}
+                      onChange={(e) => setSelectedCrowdLevel(e.target.value as 'all' | 'low' | 'medium' | 'high')}
                       className="px-3 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded-lg
                                bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100
                                focus:outline-none focus:ring-2 focus:ring-beach-500"

@@ -1,12 +1,12 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { useState } from 'react'
+import { motion, useMotionValue, useTransform } from 'framer-motion'
 import {
-  Waves, Thermometer, Users, MapPin, Star, Calendar,
-  Mountain, Shell, Anchor, Clock, AlertTriangle
+  Waves, Thermometer, Users, MapPin, Star,
+  Mountain, Shell, Anchor, Clock, AlertTriangle, Sparkles, Award
 } from 'lucide-react'
 import { WaterLocation } from '@/types/water-activities'
-import Card from '../ui/Card'
 import Badge from '../ui/Badge'
 
 interface WaterLocationCardProps {
@@ -65,44 +65,149 @@ export default function WaterLocationCard({
   const locale = (typeof window !== 'undefined' ? localStorage.getItem('locale') : 'ko') as 'ko' | 'en' | 'ja' | 'zh' || 'ko'
   const TypeIcon = typeIcons[location.type]
 
+  // 3D 효과를 위한 motion values
+  const x = useMotionValue(0)
+  const y = useMotionValue(0)
+  const rotateX = useTransform(y, [-100, 100], [30, -30])
+  const rotateY = useTransform(x, [-100, 100], [-30, 30])
+
+  const [isHovered, setIsHovered] = useState(false)
+
+  // 마우스 이벤트 핸들러
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect()
+    const centerX = rect.left + rect.width / 2
+    const centerY = rect.top + rect.height / 2
+    x.set((e.clientX - centerX) * 0.2)
+    y.set((e.clientY - centerY) * 0.2)
+  }
+
+  const handleMouseLeave = () => {
+    x.set(0)
+    y.set(0)
+    setIsHovered(false)
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: rank ? rank * 0.1 : 0 }}
+      style={{ perspective: 1000 }}
     >
-      <Card gradient onClick={onClick}>
-        <div className="relative">
-          {/* 순위 표시 */}
-          {rank && (
-            <div className="absolute -top-3 -left-3 w-12 h-12 bg-gradient-to-br from-amber-400 to-amber-500 rounded-full flex items-center justify-center shadow-lg z-10">
-              <span className="text-white font-bold text-lg">{rank}</span>
-            </div>
+      <motion.div
+        style={{ rotateX, rotateY }}
+        whileHover={{ scale: 1.02 }}
+        onMouseMove={handleMouseMove}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={handleMouseLeave}
+        onClick={onClick}
+        className="relative cursor-pointer"
+      >
+        {/* 글래스모피즘 카드 */}
+        <div className={`
+          relative overflow-hidden rounded-2xl
+          bg-white/80 dark:bg-gray-800/80
+          backdrop-blur-xl backdrop-saturate-150
+          border border-white/20 dark:border-gray-700/30
+          shadow-[0_8px_32px_0_rgba(31,38,135,0.37)]
+          hover:shadow-[0_12px_40px_0_rgba(31,38,135,0.45)]
+          transition-all duration-300
+          ${isHovered ? 'bg-gradient-to-br from-white/90 via-white/80 to-beach-50/40' : ''}
+        `}>
+          {/* 배경 그라디언트 애니메이션 */}
+          {isHovered && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="absolute inset-0 bg-gradient-to-br from-beach-400/10 via-wave-400/10 to-coral-400/10"
+            />
           )}
 
-          {/* 상태 뱃지 */}
-          {location.realTimeData?.status && (
-            <div className="absolute -top-3 right-0 z-10">
-              {location.realTimeData.status === 'closed' && (
-                <Badge variant="danger" className="animate-pulse">
-                  <AlertTriangle className="w-3 h-3 mr-1" />
-                  폐장
-                </Badge>
-              )}
-              {location.realTimeData.status === 'warning' && (
-                <Badge variant="warning" className="animate-pulse">
-                  <AlertTriangle className="w-3 h-3 mr-1" />
-                  주의
-                </Badge>
-              )}
-            </div>
+          {/* 파티클 효과 */}
+          {isHovered && matchScore > 80 && (
+            <motion.div className="absolute inset-0 pointer-events-none">
+              {[...Array(5)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, scale: 0, x: 0, y: 0 }}
+                  animate={{
+                    opacity: [0, 1, 0],
+                    scale: [0, 1, 0],
+                    x: Math.random() * 200 - 100,
+                    y: Math.random() * 200 - 100,
+                  }}
+                  transition={{
+                    duration: 2,
+                    delay: i * 0.2,
+                    repeat: Infinity,
+                    repeatDelay: 3,
+                  }}
+                  className="absolute top-1/2 left-1/2"
+                >
+                  <Sparkles className="w-4 h-4 text-yellow-400" />
+                </motion.div>
+              ))}
+            </motion.div>
           )}
 
-          {/* 메인 컨텐츠 */}
-          <div className="space-y-4">
-            {/* 헤더 */}
-            <div className="flex justify-between items-start">
-              <div className="flex-1">
+          <div className="relative p-6">
+            {/* 순위 표시 - 3D 효과 강화 */}
+            {rank && (
+              <motion.div
+                initial={{ scale: 0, rotate: -180 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{ type: "spring", stiffness: 260, damping: 20, delay: 0.2 }}
+                className="absolute -top-4 -left-4 z-20"
+              >
+                <div className="relative">
+                  <div className="absolute inset-0 bg-gradient-to-br from-amber-300 to-amber-600 rounded-full blur-md" />
+                  <div className="relative w-14 h-14 bg-gradient-to-br from-amber-400 via-amber-500 to-amber-600 rounded-full flex items-center justify-center shadow-xl">
+                    <div className="absolute inset-0 rounded-full bg-white/20 animate-pulse" />
+                    <span className="text-white font-bold text-xl relative z-10">
+                      {rank === 1 && '🥇'}
+                      {rank === 2 && '🥈'}
+                      {rank === 3 && '🥉'}
+                      {rank > 3 && rank}
+                    </span>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
+            {/* 상태 뱃지 - 애니메이션 강화 */}
+            {location.realTimeData?.status && (
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="absolute -top-3 right-3 z-10"
+              >
+                {location.realTimeData.status === 'closed' && (
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-red-500 rounded-lg blur-md animate-pulse" />
+                    <Badge variant="danger" className="relative animate-pulse backdrop-blur-sm">
+                      <AlertTriangle className="w-3 h-3 mr-1" />
+                      폐장
+                    </Badge>
+                  </div>
+                )}
+                {location.realTimeData.status === 'warning' && (
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-yellow-500 rounded-lg blur-md animate-pulse" />
+                    <Badge variant="warning" className="relative animate-pulse backdrop-blur-sm">
+                      <AlertTriangle className="w-3 h-3 mr-1" />
+                      주의
+                    </Badge>
+                  </div>
+                )}
+              </motion.div>
+            )}
+
+            {/* 메인 컨텐츠 */}
+            <div className="space-y-4">
+              {/* 헤더 */}
+              <div className="flex justify-between items-start">
+                <div className="flex-1">
                 {/* 활동 유형 태그 */}
                 <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium mb-2 ${typeColors[location.type]}`}>
                   <TypeIcon className="w-3 h-3" />
@@ -119,19 +224,78 @@ export default function WaterLocationCard({
               </div>
 
               <div className="text-right ml-4">
-                {/* 평점 */}
+                {/* 평점 - 애니메이션 추가 */}
                 {location.rating && (
-                  <div className="flex items-center">
-                    <Star className="w-5 h-5 text-amber-400 mr-1" />
-                    <span className="font-semibold">{location.rating.toFixed(1)}</span>
-                  </div>
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: 0.3, type: "spring" }}
+                    className="flex items-center mb-2"
+                  >
+                    <Star className="w-5 h-5 text-amber-400 mr-1 fill-amber-400" />
+                    <span className="font-bold text-lg">{location.rating.toFixed(1)}</span>
+                  </motion.div>
                 )}
 
-                {/* 매치 스코어 */}
+                {/* 매치 스코어 - 원형 프로그레스바 */}
                 {showMatchScore && matchScore > 0 && (
-                  <div className="text-beach-600 dark:text-beach-400 font-bold text-lg mt-1">
-                    {matchScore}% 일치
-                  </div>
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.4, type: "spring" }}
+                    className="relative w-16 h-16"
+                  >
+                    <svg className="transform -rotate-90 w-16 h-16">
+                      <circle
+                        cx="32"
+                        cy="32"
+                        r="28"
+                        stroke="currentColor"
+                        strokeWidth="6"
+                        fill="none"
+                        className="text-gray-200 dark:text-gray-700"
+                      />
+                      <motion.circle
+                        cx="32"
+                        cy="32"
+                        r="28"
+                        stroke="url(#gradient)"
+                        strokeWidth="6"
+                        fill="none"
+                        strokeLinecap="round"
+                        initial={{ pathLength: 0 }}
+                        animate={{ pathLength: matchScore / 100 }}
+                        transition={{ duration: 1, ease: "easeOut" }}
+                        style={{
+                          strokeDasharray: `${2 * Math.PI * 28}`,
+                          strokeDashoffset: `${2 * Math.PI * 28 * (1 - matchScore / 100)}`
+                        }}
+                      />
+                      <defs>
+                        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="#60A5FA" />
+                          <stop offset="50%" stopColor="#A78BFA" />
+                          <stop offset="100%" stopColor="#F472B6" />
+                        </linearGradient>
+                      </defs>
+                    </svg>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="text-center">
+                        <div className="font-bold text-lg bg-gradient-to-r from-beach-600 to-wave-600 bg-clip-text text-transparent">
+                          {matchScore}%
+                        </div>
+                        {matchScore >= 90 && (
+                          <motion.div
+                            initial={{ scale: 0 }}
+                            animate={{ scale: [1, 1.2, 1] }}
+                            transition={{ repeat: Infinity, duration: 2 }}
+                          >
+                            <Award className="w-4 h-4 text-amber-500 mx-auto" />
+                          </motion.div>
+                        )}
+                      </div>
+                    </div>
+                  </motion.div>
                 )}
               </div>
             </div>
@@ -246,7 +410,8 @@ export default function WaterLocationCard({
             </div>
           </div>
         </div>
-      </Card>
+        </div>
+      </motion.div>
     </motion.div>
   )
 }

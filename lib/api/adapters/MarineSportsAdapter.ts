@@ -517,7 +517,7 @@ export class MarineSportsAdapter {
    */
   async findBestLocationForActivity(
     activityType: SportActivity['type'],
-    currentWeather?: any
+    currentWeather?: { windSpeed?: number; waveHeight?: number; temperature?: number }
   ): Promise<MarineSportsData[]> {
     const locations = await this.getLocations()
 

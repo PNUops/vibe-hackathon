@@ -2,13 +2,14 @@
 
 import { useState, useEffect } from 'react'
 import { NextIntlClientProvider } from 'next-intl'
+import { ToastProvider } from './ui/ToastContainer'
 
 const locales = ['ko', 'en', 'ja', 'zh'] as const
 type Locale = (typeof locales)[number]
 
 export default function ClientWrapper({ children }: { children: React.ReactNode }) {
   const [locale, setLocale] = useState<Locale>('ko')
-  const [messages, setMessages] = useState<any>(null)
+  const [messages, setMessages] = useState<Record<string, string> | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
@@ -63,8 +64,10 @@ export default function ClientWrapper({ children }: { children: React.ReactNode 
   }
 
   return (
-    <NextIntlClientProvider locale={locale} messages={messages}>
-      {children}
-    </NextIntlClientProvider>
+    <ToastProvider>
+      <NextIntlClientProvider locale={locale} messages={messages}>
+        {children}
+      </NextIntlClientProvider>
+    </ToastProvider>
   )
 }

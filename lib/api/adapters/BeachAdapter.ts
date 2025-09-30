@@ -254,12 +254,12 @@ export class BeachAdapter {
   /**
    * API 응답 데이터를 BeachData 형식으로 변환
    */
-  private transformBeachData(apiData: any): BeachData[] {
+  private transformBeachData(apiData: unknown[]): BeachData[] {
     // TODO: 실제 API 응답에 맞춰 변환 로직 구현
-    return apiData.map((item: any) => this.transformBeachItem(item))
+    return apiData.map((item: unknown) => this.transformBeachItem(item))
   }
 
-  private transformBeachItem(item: any): BeachData {
+  private transformBeachItem(item: Record<string, unknown>): BeachData {
     // TODO: 실제 API 응답 구조에 맞춰 매핑
     return {
       id: item.id,

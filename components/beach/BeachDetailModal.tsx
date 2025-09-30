@@ -20,7 +20,7 @@ interface BeachDetailModalProps {
 export default function BeachDetailModal({ beach, isOpen, onClose }: BeachDetailModalProps) {
   const t = useTranslations()
 
-  const facilitiesIcons: Record<string, any> = {
+  const facilitiesIcons: Record<string, React.ComponentType<{ className?: string }>> = {
     '샤워실': ShowerHead,
     '화장실': Store,
     '주차장': Car,

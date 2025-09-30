@@ -7,7 +7,7 @@ interface CacheEntry<T> {
 }
 
 export class ApiCache {
-  private cache: Map<string, CacheEntry<any>>
+  private cache: Map<string, CacheEntry<unknown>>
   private cleanupInterval: NodeJS.Timeout | null = null
 
   constructor() {

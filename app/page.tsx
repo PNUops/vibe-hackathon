@@ -32,8 +32,6 @@ export default function Home() {
   const {
     hasCompletedOnboarding,
     setHasCompletedOnboarding,
-    recommendations,
-    setRecommendations,
     selectedBeach,
     setSelectedBeach
   } = useStore()
@@ -92,11 +90,11 @@ export default function Home() {
   const handleOnboardingComplete = async () => {
     setHasCompletedOnboarding(true)
     setShowOnboarding(false)
-    // 사용자 선호도에 따른 추천 데이터 가져오기 (페이지 리로드 없이)
-    await loadPopularLocations()
+    // 추천 페이지로 이동
+    window.location.href = '/recommendations'
   }
 
-  const handleLanguageSelect = (langCode: string) => {
+  const handleLanguageSelect = () => {
     setShowLanguageSelection(false)
     // 페이지 새로고침하여 선택한 언어 적용
     window.location.reload()
