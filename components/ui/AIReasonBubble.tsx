@@ -146,9 +146,19 @@ export default function AIReasonBubble({
       <AnimatePresence>
         {isVisible && reasons.length > 0 && (
           <motion.div
-            initial={{ opacity: 0, scale: 0, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0, y: 20 }}
+            initial={{
+              opacity: 0,
+              scale: 0,
+              y: position === 'top' ? -20 : position === 'bottom' ? 20 : 0,
+              x: position === 'left' ? -20 : position === 'right' ? 20 : 0
+            }}
+            animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
+            exit={{
+              opacity: 0,
+              scale: 0,
+              y: position === 'top' ? -20 : position === 'bottom' ? 20 : 0,
+              x: position === 'left' ? -20 : position === 'right' ? 20 : 0
+            }}
             transition={{ type: "spring", stiffness: 260, damping: 20 }}
             className={`absolute ${positionStyles[position]} z-50`}
           >
